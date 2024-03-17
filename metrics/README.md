@@ -13,30 +13,36 @@ Usage
 Create and update metrics:
 
 ```go
+// Create and register a new Counter metric
 c := metrics.NewCounter()
 metrics.Register("foo", c)
-c.Inc(47)
+c.Inc(47) // Increment the counter by 47
 
+// Create and register a new Gauge metric
 g := metrics.NewGauge()
 metrics.Register("bar", g)
-g.Update(47)
+g.Update(47) // Update the gauge to the value 47
 
+// Example of a functional gauge registered with a custom function
 r := NewRegistry()
-g := metrics.NewRegisteredFunctionalGauge("cache-evictions", r, func() int64 { return cache.getEvictionsCount() })
+cacheEvictionsGauge := metrics.NewRegisteredFunctionalGauge("cache-evictions", r, func() int64 { return cache.getEvictionsCount() })
 
+// Create and register a new Histogram metric with an exponential decay sample
 s := metrics.NewExpDecaySample(1028, 0.015) // or metrics.NewUniformSample(1028)
 h := metrics.NewHistogram(s)
 metrics.Register("baz", h)
-h.Update(47)
+h.Update(47) // Update the histogram with a value of 47
 
+// Create and register a new Meter metric
 m := metrics.NewMeter()
 metrics.Register("quux", m)
-m.Mark(47)
+m.Mark(47) // Mark the meter 47 times
 
+// Create and register a new Timer metric
 t := metrics.NewTimer()
 metrics.Register("bang", t)
-t.Time(func() {})
-t.Update(47)
+t.Time(func() {}) // Record the duration of the function execution
+t.Update(47)      // Update the timer with a value of 47
 ```
 
 Register() is not threadsafe. For threadsafe metric registration use
